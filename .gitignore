@@ -1,5 +1,9 @@
+code/.ipynb_checkpoints/
+code/sketch.ipynb
+*.svg
+
 # Byte-compiled / optimized / DLL files
-__pycache__/
+code/__pycache__/
 *.py[cod]
 *$py.class
 
