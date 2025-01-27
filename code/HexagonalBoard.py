@@ -82,7 +82,7 @@ def draw_hexboard(board, *,
       ax.text(x, y, stone[1:], color='black', ha='center', va='center', size=label_sz)
 
   ax.autoscale_view()
-  plt.savefig(filename) # save board as svg
+  plt.savefig(filename, bbox_inches='tight') # save board as svg
 
 ###
 

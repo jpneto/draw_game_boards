@@ -88,7 +88,10 @@ def draw_board(n_rows, n_cols, stones,
                            markerfacecolor=background, 
                            markeredgewidth=2/RATIO)
   
-      color = 'white' if (x,y) in stones['black'] else 'black'
+      if (x,y) in stones['black'] or (x,y) in stones['purple'] or (x,y) in stones['blue']:
+        color = 'white' 
+      else:
+        color = 'black'
       ax.text(x, y, s, size=LABEL_SIZE, color=color, ha='center', va='center')
     
   # draw markers  
@@ -140,6 +143,9 @@ def intersections(grid):
   lines = [line for line in grid.split('\n') if len(line)>0] # remove empty lines
   n_rows, n_cols = len(lines), len(lines[0].split())
   
+  stone_color = {'x':'black', 'o':'white',  'r':'red',    'l':'blue', 
+                 'g':'green', 'p':'purple', 'y':'yellow', 's':'silver'}
+    
   stones, labels, markers = defaultdict(list), [], []
   for r, line in enumerate(lines):
     for c, stone in enumerate(line.split()):
@@ -160,6 +166,12 @@ def intersections(grid):
           markers.append( (c+0.001, n_rows-r-1, 'lightgray', 28/RATIO, 'o') )
         if stone[0] == 'Q':
           markers.append( (c+0.001, n_rows-r-1, 'black', 14/RATIO, 's') )
+        if len(stone) > 1: # this is a labeled stone
+          labels.append( (c, n_rows-r-1, stone[1:]) )
+
+      # other colors
+      elif stone[0] in stone_color:
+        stones[stone_color[stone[0]]].append( (c, n_rows-r-1) )
         if len(stone) > 1: # this is a labeled stone
           labels.append( (c, n_rows-r-1, stone[1:]) )
           

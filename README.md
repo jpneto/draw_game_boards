@@ -53,6 +53,30 @@ Sq(ko, go_like=False, filename='ko.svg');
     
 
 
+It's possible to represent color stones directly:
+
+
+```python
+red_white_blue = """
+l l l l l l l l  
+l l o2 o2 o2 o2 l l  
+l . .  o2 o2 o2 . l  
+. . . . . . . . 
+. . . . . . . .  
+r . .  o1 o1 o1 r r  
+r r o1 o1 o1 o1 r r 
+r r r r r r r r 
+"""
+
+Sq(red_white_blue, filename='2026_02_Red_White_Blue_setup.svg');
+```
+
+
+    
+![png](imgs/output_10_0.png)
+    
+
+
 The class also accepts a list of moves (must set parameter `size` with the board size):
 
 
@@ -72,7 +96,7 @@ Sq(match, size=(6,9));
 
 
     
-![png](imgs/output_10_0.png)
+![png](imgs/output_12_0.png)
     
 
 
@@ -100,7 +124,7 @@ Hex(board);
 
 
     
-![png](imgs/output_13_0.png)
+![png](imgs/output_15_0.png)
     
 
 
@@ -188,7 +212,7 @@ draw_board(*data) # this SVG diagram is saved as a file in the notebook's folder
 
 
     
-![png](imgs/output_26_0.png)
+![png](imgs/output_28_0.png)
     
 
 
@@ -203,7 +227,7 @@ draw_board(*data)
 
 
     
-![png](imgs/output_28_0.png)
+![png](imgs/output_30_0.png)
     
 
 
@@ -248,7 +272,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_32_0.png)
+![png](imgs/output_34_0.png)
     
 
 
@@ -263,7 +287,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_34_0.png)
+![png](imgs/output_36_0.png)
     
 
 
@@ -284,7 +308,7 @@ draw_board(*squares(board), background='khaki')
 
 
     
-![png](imgs/output_36_0.png)
+![png](imgs/output_38_0.png)
     
 
 
@@ -362,7 +386,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_46_0.png)
+![png](imgs/output_48_0.png)
     
 
 
@@ -395,7 +419,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_50_0.png)
+![png](imgs/output_52_0.png)
     
 
 
@@ -407,7 +431,7 @@ draw_board(*squares(board))
 
 
     
-![png](imgs/output_51_0.png)
+![png](imgs/output_53_0.png)
     
 
 
@@ -483,7 +507,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_55_0.png)
+![png](imgs/output_57_0.png)
     
 
 
@@ -510,7 +534,7 @@ draw_board(8, 8, stones, labels, markers, coordinates=1) # coordinates=1 for int
 
 
     
-![png](imgs/output_58_0.png)
+![png](imgs/output_60_0.png)
     
 
 
@@ -610,7 +634,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_68_0.png)
+![png](imgs/output_70_0.png)
     
 
 
@@ -632,7 +656,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_70_0.png)
+![png](imgs/output_72_0.png)
     
 
 
@@ -654,7 +678,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_72_0.png)
+![png](imgs/output_74_0.png)
     
 
 
@@ -667,7 +691,7 @@ draw_hexboard(hex_coords(board), hexcolor='rgb')
 
 
     
-![png](imgs/output_74_0.png)
+![png](imgs/output_76_0.png)
     
 
 
@@ -680,7 +704,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_76_0.png)
+![png](imgs/output_78_0.png)
     
 
 
@@ -693,7 +717,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue', rotate
 
 
     
-![png](imgs/output_78_0.png)
+![png](imgs/output_80_0.png)
     
 
 
@@ -708,7 +732,7 @@ draw_hexboard(hexes, hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_80_0.png)
+![png](imgs/output_82_0.png)
     
 
 
@@ -730,7 +754,7 @@ draw_hexboard(hex_coords(hex), hexcolor='white', edgecolor='cyan', background=No
 
 
     
-![png](imgs/output_82_0.png)
+![png](imgs/output_84_0.png)
     
 
 
@@ -767,7 +791,7 @@ draw_hexboard(hex_coords(board), piece_sz=8, label_sz=8)
 
 
     
-![png](imgs/output_84_0.png)
+![png](imgs/output_86_0.png)
     
 
 
@@ -853,7 +877,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_92_0.png)
+![png](imgs/output_94_0.png)
     
 
 
@@ -874,6 +898,15 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_94_0.png)
+![png](imgs/output_96_0.png)
     
 
+
+---
+
+### Versions
+
++ Jan 27
+    + added color stones directly on square boards
+    + background around the board is now tighter
++ Jan 22, 2025 - version 0
