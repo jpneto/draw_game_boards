@@ -136,6 +136,27 @@ Sq(match, size=(6,9), players='oxxo');
     
 
 
+It's possible to represent stacks using the following syntax: `[abcd` where each letter represents a possible color (suggestion: avoid stacks with black stones)
+
+
+```python
+stacks = """
+.   .   .     .     .
+.   .   [ollo [llo  .
+.   [oo [l    l     .
+.   .   [ooll [oooy .
+.   .   .     .     .
+"""
+
+Sq(stacks);
+```
+
+
+    
+![png](imgs/output_17_0.png)
+    
+
+
 The class `Hex` just accepts textual boards:
 
 
@@ -151,7 +172,7 @@ board = """
  . . o x . .
 . . . . . . .
  . . o . . .
-  p . . . s♔
+  p c h n s♔
    g r y l
 """
 
@@ -160,7 +181,7 @@ Hex(board);
 
 
     
-![png](imgs/output_18_0.png)
+![png](imgs/output_20_0.png)
     
 
 
@@ -169,11 +190,11 @@ Hexagonal boards can also have a square-liked shape:
 
 ```python
 hex = """
- . . . x . . .
-  . o . . . . .
-  . . x . . . .
-   . . . x o . .
-  . . . o . . .
+ . . . x . . 
+  . o . . . . 
+  . . x . . . 
+   . . . x o .
+  . . . o . . 
 """
 
 # it's also possible to configure the board colors
@@ -183,7 +204,30 @@ Hex(hex, square_like=True,
 
 
     
-![png](imgs/output_20_0.png)
+![png](imgs/output_22_0.png)
+    
+
+
+Stack notation also work in hexagonal boards:
+
+
+```python
+board = """
+   . . . .
+  . . . . .
+ . . . . . .
+. . . . [oo . .
+. . . . [lnnl .
+ . . . . [lln
+  . . . .
+"""
+
+Hex(board);
+```
+
+
+    
+![png](imgs/output_24_0.png)
     
 
 
@@ -213,7 +257,7 @@ help(draw_board)
 
     Help on function draw_board in module Board:
     
-    draw_board(n_rows, n_cols, stones, labels=None, markers=None, coordinates=None, background='ivory', filename='board.svg')
+    draw_board(n_rows, n_cols, stones, labels=None, markers=None, stacks=None, coordinates=None, background='ivory', filename='board.svg')
         Draws a rectangle-shaped board
         
         * n_rows : number of rows
@@ -273,7 +317,7 @@ draw_board(*data) # this SVG diagram is saved as a file in the notebook's folder
 
 
     
-![png](imgs/output_33_0.png)
+![png](imgs/output_37_0.png)
     
 
 
@@ -288,7 +332,7 @@ draw_board(*data)
 
 
     
-![png](imgs/output_35_0.png)
+![png](imgs/output_39_0.png)
     
 
 
@@ -333,7 +377,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_39_0.png)
+![png](imgs/output_43_0.png)
     
 
 
@@ -348,7 +392,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_41_0.png)
+![png](imgs/output_45_0.png)
     
 
 
@@ -369,7 +413,7 @@ draw_board(*squares(board), background='khaki')
 
 
     
-![png](imgs/output_43_0.png)
+![png](imgs/output_47_0.png)
     
 
 
@@ -447,7 +491,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_53_0.png)
+![png](imgs/output_57_0.png)
     
 
 
@@ -481,7 +525,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_57_0.png)
+![png](imgs/output_61_0.png)
     
 
 
@@ -493,7 +537,7 @@ draw_board(*squares(board))
 
 
     
-![png](imgs/output_58_0.png)
+![png](imgs/output_62_0.png)
     
 
 
@@ -569,30 +613,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_62_0.png)
-    
-
-
-### About Stacks
-
-Currently, there is no way to deal with stacks. It is possible to use unicode chars to emulate stacks of black and white pieces:
-
-
-```python
-# ⚋ ⚊ ⚏ ⚎ ⚍ ⚌ ☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷
-board = """
-.  .  .  .
-.  o☱ x⚏ .
-.  .  .  .
-o☵ .  s⚊ .
-"""
-
-Sq(board, go_like=False);
-```
-
-
-    
-![png](imgs/output_65_0.png)
+![png](imgs/output_66_0.png)
     
 
 
@@ -608,7 +629,9 @@ Here's an example:
 stones = {}
 stones['white'] = [(3,2), (1,1)] # each pair represents (column, row) of a stone (0-indexed)
 stones['black'] = [(2,1), (3,1)]
-stones['cyan']  = [(4.5,4.5)] # +0.5 values move from/to intersections <-> squares
+stones['cyan']  = [(4.5,4.5)]    # ±0.5 values move from/to intersections <-> squares
+
+stones['deepskyblue'] = [(5, 1+.12*h) for h in range(4)] # make a stack
 
 labels = [(3,2,'3'), (3,1,'88'), (3,3,'a')]
 # https://matplotlib.org/stable/api/markers_api.html
@@ -619,11 +642,13 @@ draw_board(8, 8, stones, labels, markers, coordinates=1) # coordinates=1 for int
 
 
     
-![png](imgs/output_68_0.png)
+![png](imgs/output_69_0.png)
     
 
 
 These primitives can be used to build new functions that process different types of games.
+
+You need to check the code for more details.
 
 ## Hexagonal Boards
 
@@ -642,8 +667,9 @@ help(draw_hexboard)
     Help on function draw_hexboard in module HexagonalBoard:
     
     draw_hexboard(board, *, hexcolor='earth', edgecolor=None, piece_sz=26, label_sz=18, background='ivory', rotate=False, filename='hexboard.svg')
-        board : List[(int, int, int)]
-          Coordinates (x,y,z) of all hexes making the board
+        board : List[(int, int, int, str)]
+          Coordinates (x,y,z) of all hexes making the board, 
+            plus a string with the piece/label for that coordinate
           Use hex_coords() as a helper function
         hexcolor : str, optional
           The pallete to color fill the board hexes. 
@@ -719,7 +745,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_78_0.png)
+![png](imgs/output_79_0.png)
     
 
 
@@ -741,7 +767,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_80_0.png)
+![png](imgs/output_81_0.png)
     
 
 
@@ -763,7 +789,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_82_0.png)
+![png](imgs/output_83_0.png)
     
 
 
@@ -776,7 +802,7 @@ draw_hexboard(hex_coords(board), hexcolor='rgb')
 
 
     
-![png](imgs/output_84_0.png)
+![png](imgs/output_85_0.png)
     
 
 
@@ -789,7 +815,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_86_0.png)
+![png](imgs/output_87_0.png)
     
 
 
@@ -802,7 +828,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue', rotate
 
 
     
-![png](imgs/output_88_0.png)
+![png](imgs/output_89_0.png)
     
 
 
@@ -817,7 +843,7 @@ draw_hexboard(hexes, hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_90_0.png)
+![png](imgs/output_91_0.png)
     
 
 
@@ -839,7 +865,7 @@ draw_hexboard(hex_coords(hex), hexcolor='white', edgecolor='cyan', background=No
 
 
     
-![png](imgs/output_92_0.png)
+![png](imgs/output_93_0.png)
     
 
 
@@ -876,7 +902,7 @@ draw_hexboard(hex_coords(board), piece_sz=8, label_sz=8)
 
 
     
-![png](imgs/output_94_0.png)
+![png](imgs/output_95_0.png)
     
 
 
@@ -962,7 +988,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_102_0.png)
+![png](imgs/output_103_0.png)
     
 
 
@@ -983,7 +1009,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_104_0.png)
+![png](imgs/output_105_0.png)
     
 
 
@@ -991,11 +1017,13 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 ### Versions
 
-+ Feb 2
++ Feb 2 (version 0.1)
+    + added stack representation
     + included `player` parameter to class `Sq`
     + list of moves now accept captures, eg `a1,b2:c3,d4`
     + added square-like shapes for hexagonal boards via parameter `square_like`
     + included `hexcolor`, `edgecolor` and `background` parameters to `Hex` class
+    + added new color symbols: `n` orange, `c` cyan, `h` chocolat
 + Jan 27
     + added color stones directly on square boards
     + background around the board is now tighter

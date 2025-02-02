@@ -22,6 +22,7 @@ def set_ratio(n):
 def draw_board(n_rows, n_cols, stones, 
                labels=None, 
                markers=None, 
+               stacks=None,
                coordinates=None, 
                background='ivory', 
                filename='board.svg'):
@@ -60,6 +61,25 @@ def draw_board(n_rows, n_cols, stones,
   ax.set_axis_off()          # get rid of axes and everything
   ax.set_xlim(-.5, n_cols-.5) # scale the plot area 
   ax.set_ylim(-.5, n_rows-.5)
+
+  #####
+  # TODO: the board representation now needs a refactor, adding stacks
+  #       forced me to use different data structures
+  # These dictionaries are used to draw stacks
+  
+  stone_color = {'x':'black',     'o':'white',  'r':'red',    'l':'deepskyblue', 
+                 'g':'limegreen', 'p':'violet', 'y':'yellow', 's':'silver',
+                 'n': 'orange',   'c':'cyan',   'h':'chocolate'}
+  
+  stone_color_edge = {'x':'gray',  'o':'black', 'r':'black', 'l':'black', 
+                      'g':'black', 'p':'black', 'y':'black', 's':'black',
+                      'n': 'black',   'c':'black',   'h':'black'}
+  
+  # stone_label = {'x':'white', 'o':'black', 'r':'black', 'l':'white', 
+  #                'g':'black', 'p':'white', 'y':'black', 's':'black', 
+  #                'n': 'black',   'c':'black',   'h':'black',
+  #                '.':'black', }  
+  #####
   
   # draw the grid
   for x in range(n_cols):
@@ -96,6 +116,16 @@ def draw_board(n_rows, n_cols, stones,
         color = 'black'
       ax.text(x, y, s, size=LABEL_SIZE, color=color, ha='center', va='center')
     
+  # draw stacks
+  if stacks:
+    for x,y,stack in stacks:
+      for i, stack_piece in enumerate(stack):
+        ax.plot(x, y+.15*i, 'o',
+                markersize=PIECE_SIZE, 
+                markeredgecolor=stone_color_edge[stack_piece], 
+                markerfacecolor=stone_color[stack_piece], 
+                markeredgewidth=2/RATIO)            
+  
   # draw markers  
   if markers:
     for x,y,color,dot_sz,mk in markers:
@@ -145,10 +175,11 @@ def intersections(grid):
   lines = [line for line in grid.split('\n') if len(line)>0] # remove empty lines
   n_rows, n_cols = len(lines), len(lines[0].split())
   
-  stone_color = {'x':'black', 'o':'white',  'r':'red',    'l':'blue', 
-                 'g':'green', 'p':'purple', 'y':'yellow', 's':'silver'}
+  stone_color = {'x':'black',     'o':'white',  'r':'red',    'l':'deepskyblue', 
+                 'g':'limegreen', 'p':'violet', 'y':'yellow', 's':'silver',
+                 'n': 'orange',   'c':'cyan',   'h':'chocolate'}
     
-  stones, labels, markers = defaultdict(list), [], []
+  stones, labels, markers, stacks = defaultdict(list), [], [], []
   for r, line in enumerate(lines):
     for c, stone in enumerate(line.split()):
       
@@ -179,6 +210,10 @@ def intersections(grid):
         if len(stone) > 1: # this is a labeled stone
           labels.append( (c, n_rows-r-1, stone[1:]) )
           
+      # a stack (to work, there's the need to pass them whole for draw_board)
+      elif stone[0] == '[':
+        stacks.append( (c, n_rows-r-1, stone[1:]) )
+          
       # just a label    
       elif stone[0] != '.':
         labels.append( (c, n_rows-r-1, stone) )
@@ -187,19 +222,20 @@ def intersections(grid):
       elif len(stone)>1:
           labels.append( (c, n_rows-r-1, stone[1:]) )
         
-  return n_rows, n_cols, stones, labels, markers, 1
+  return n_rows, n_cols, stones, labels, markers, stacks, 1
 
 
 def squares(grid):
   """ receives the same information as intersections(), but returns
       the data to be drawn inside the squares """
-  n_rows, n_cols, stones, labels, markers, _ = intersections(grid)
+  n_rows, n_cols, stones, labels, markers, stacks, _ = intersections(grid)
   # shift graphic elements from the intersections to the middle of the squares
   for stone_type in stones:
     stones[stone_type] = [(x+.5, y+.5) for x,y in stones[stone_type]]
   labels  = [(x+.5, y+.5, label)      for x,y,label    in labels]
   markers = [(x+.5, y+.5, cl, sz, mk) for x,y,cl,sz,mk in markers]
-  return n_rows+1, n_cols+1, stones, labels, markers, 2
+  stacks  = [(x+.5, y+.5, label)      for x,y,label    in stacks]
+  return n_rows+1, n_cols+1, stones, labels, markers, stacks, 2
 
 
 ####
@@ -304,9 +340,9 @@ class Sq():
 
 #   grid = """
 #   .  x88 .  o2  .  .
-#   .  2  .  1  .  .
-#   .  .  .  .  .  .
-#   Q  O  #  .  X  ."""
+#   .  2  .  1   h  [ooc
+#   .  .  .  r1  n  [pnr
+#   Q  O  #  g1  l3  ."""
   
 #   draw_board(*intersections(grid))
 #   draw_board(*squares(grid))
@@ -315,11 +351,11 @@ class Sq():
 
 # if __name__ == "__main__":
 #   stones = {}  
-#   stones['white'] = [(3,2), (1,1)]
-#   stones['black'] = [(2,1), (3,1)]
-#   stones['cyan'] = [(4.5,4.5)]
+#   stones['white'] = [(3,2), (1,1), (1,1.12), (1,1.24),(1,1.36),]
+#   stones['black'] = [(2,1), (3,1), (1,2)]
+#   stones['deepskyblue'] = [(4.5,4.5), (5,1), (5,1.12), (5,1.24),(5,1.36),]
   
 #   labels = [(3,2,'3'), (3,1,'88'), (3,3,'a')]
 #   markers = [(4,5,'blue',8,'o')] # https://matplotlib.org/stable/api/markers_api.html
   
-#   draw_board(sz=(8,8), stones=stones, labels=labels, markers=markers)  
+#   draw_board(8, 8, stones=stones, labels=labels, markers=markers)  

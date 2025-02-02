@@ -16,8 +16,9 @@ def draw_hexboard(board, *,
                   rotate=False,
                   filename='hexboard.svg'):
   """
-  board : List[(int, int, int)]
-    Coordinates (x,y,z) of all hexes making the board
+  board : List[(int, int, int, str)]
+    Coordinates (x,y,z) of all hexes making the board, 
+      plus a string with the piece/label for that coordinate
     Use hex_coords() as a helper function
   hexcolor : str, optional
     The pallete to color fill the board hexes. 
@@ -60,14 +61,19 @@ def draw_hexboard(board, *,
                          alpha=1, 
                          edgecolor=edgecolor)
     ax.add_patch(hex)
+
+    stone_color = {'x':'black',     'o':'white',  'r':'red',    'l':'deepskyblue', 
+                   'g':'limegreen', 'p':'violet', 'y':'yellow', 's':'silver',
+                   'n': 'orange',   'c':'cyan',   'h':'chocolate'}
     
-    stone_color = {'x':'black', 'o':'white',  'r':'red',    'l':'blue', 
-                   'g':'green', 'p':'purple', 'y':'yellow', 's':'silver'}
     stone_color_edge = {'x':'gray',  'o':'black', 'r':'black', 'l':'black', 
-                        'g':'black', 'p':'black', 'y':'black', 's':'black'}
+                        'g':'black', 'p':'black', 'y':'black', 's':'black',
+                        'n': 'black',   'c':'black',   'h':'black'}
+    
     stone_label = {'x':'white', 'o':'black', 'r':'black', 'l':'white', 
                    'g':'black', 'p':'white', 'y':'black', 's':'black', 
-                   '.':'black'}
+                   'n': 'black',   'c':'black',   'h':'black',
+                   '.':'black', }
     
     if stone[0] in stone_color:
       ax.plot(x, y, 'o', markersize=piece_sz, 
@@ -77,6 +83,14 @@ def draw_hexboard(board, *,
       if len(stone)>1:
         ax.text(x, y, stone[1:], color=stone_label[stone[0]], 
                 ha='center', va='center', size=label_sz)
+    
+    elif stone[0] == '[':  # show a stack
+      for i, stack_piece in enumerate(stone[1:]):
+        ax.plot(x, y+.15*i, 'o',
+                markersize=piece_sz, 
+                markerfacecolor=stone_color[stack_piece], 
+                markeredgecolor=stone_color_edge[stack_piece], 
+                markeredgewidth=1)        
                
     elif stone[0] == '.':
       ax.text(x, y, stone[1:], color='black', ha='center', va='center', size=label_sz)
@@ -293,19 +307,36 @@ class Hex():
   # board = read_hex_game(7, moves, corner='h1', players='ox')
   # draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
     
-####
+# ####
 
 # if __name__ == "__main__":
 
 #   board = """
 #       . . . .♔
-#      . x . . .
+#       . x . . .
 #     . . . g . .
-#    . . . . . . .
-#     . . . o . .
-#      . . . o o
+#     . h p l n . .
+#     . c . o . .
+#       . y . o o
 #       . . . .
 #   """
   
 #   coords = hex_coords(board)
 #   draw_hexboard(coords, hexcolor='rgb', edgecolor=None, rotate=True) 
+  
+####
+
+# if __name__ == "__main__":
+
+#   board = """
+#        . . . .
+#       . . . . .
+#      . . . . . .
+#     . . . . [nn . .
+#     . . . . [lyyl .
+#      . . . . [ool
+#       . . . .
+#   """
+  
+#   coords = hex_coords(board)
+#   draw_hexboard(coords)
