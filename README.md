@@ -36,7 +36,7 @@ Sq(ko);
 
 
     
-![png](imgs/output_6_0.png)
+![png](output_6_0.png)
     
 
 
@@ -49,7 +49,7 @@ Sq(ko, go_like=False, filename='ko.svg');
 
 
     
-![png](imgs/output_8_0.png)
+![png](output_8_0.png)
     
 
 
@@ -73,7 +73,7 @@ Sq(red_white_blue, filename='2026_02_Red_White_Blue_setup.svg');
 
 
     
-![png](imgs/output_10_0.png)
+![png](output_10_0.png)
     
 
 
@@ -82,13 +82,14 @@ The class also accepts a list of moves (must set parameter `size` with the board
 
 ```python
 # for a multi-move turn, separate moves with a comma
+# for captures, use :
 match = """
 d3 h4 a5
 d6    c4
 b5    e4
 f4    f5
 c2    h6
-g6    h5,b1
+g6    h5,b1:d3,g6
 """
 
 Sq(match, size=(6,9));
@@ -96,7 +97,42 @@ Sq(match, size=(6,9));
 
 
     
-![png](imgs/output_12_0.png)
+![png](output_12_0.png)
+    
+
+
+It's possible to define the order of stone placement:
+
+
+```python
+match = """
+d3 h4 a5
+d6    c4
+b5    e4
+f4    f5
+c2    h6
+g6    h5,b1\
+"""
+
+# white starts first
+Sq(match, size=(6,9), players='ox');
+```
+
+
+    
+![png](output_14_0.png)
+    
+
+
+
+```python
+# white starts first, using a 122... sequence
+Sq(match, size=(6,9), players='oxxo');
+```
+
+
+    
+![png](output_15_0.png)
     
 
 
@@ -124,9 +160,34 @@ Hex(board);
 
 
     
-![png](imgs/output_15_0.png)
+![png](output_18_0.png)
     
 
+
+Hexagonal boards can also have a square-liked shape:
+
+
+```python
+hex = """
+ . . . x . . .
+  . o . . . . .
+  . . x . . . .
+   . . . x o . .
+  . . . o . . .
+"""
+
+# it's also possible to configure the board colors
+Hex(hex, square_like=True,
+    hexcolor='white', edgecolor='cyan', background='white');
+```
+
+
+    
+![png](output_20_0.png)
+    
+
+
+---
 
 These two modules allow for more flexibility, but users need to deal with more detail.
 
@@ -212,7 +273,7 @@ draw_board(*data) # this SVG diagram is saved as a file in the notebook's folder
 
 
     
-![png](imgs/output_28_0.png)
+![png](output_33_0.png)
     
 
 
@@ -227,7 +288,7 @@ draw_board(*data)
 
 
     
-![png](imgs/output_30_0.png)
+![png](output_35_0.png)
     
 
 
@@ -272,7 +333,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_34_0.png)
+![png](output_39_0.png)
     
 
 
@@ -287,7 +348,7 @@ draw_board(*squares(alak))
 
 
     
-![png](imgs/output_36_0.png)
+![png](output_41_0.png)
     
 
 
@@ -308,7 +369,7 @@ draw_board(*squares(board), background='khaki')
 
 
     
-![png](imgs/output_38_0.png)
+![png](output_43_0.png)
     
 
 
@@ -386,7 +447,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_48_0.png)
+![png](output_53_0.png)
     
 
 
@@ -402,6 +463,7 @@ help(read_game)
         n_cols  : size of the board
         moves   : multi-line string with the moves
            moves must be separared with spaces, multi-moves by commas
+           capture use ':' (eg: 'a1,b2:c3,d4' )
         labels  : show stone's turn if True, no labels if False
         players : get color of next player
     
@@ -419,7 +481,7 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_52_0.png)
+![png](output_57_0.png)
     
 
 
@@ -431,7 +493,7 @@ draw_board(*squares(board))
 
 
     
-![png](imgs/output_53_0.png)
+![png](output_58_0.png)
     
 
 
@@ -507,7 +569,30 @@ draw_board(*intersections(board))
 
 
     
-![png](imgs/output_57_0.png)
+![png](output_62_0.png)
+    
+
+
+### About Stacks
+
+Currently, there is no way to deal with stacks. It is possible to use unicode chars to emulate stacks of black and white pieces:
+
+
+```python
+# ⚋ ⚊ ⚏ ⚎ ⚍ ⚌ ☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷
+board = """
+.  .  .  .
+.  o☱ x⚏ .
+.  .  .  .
+o☵ .  s⚊ .
+"""
+
+Sq(board, go_like=False);
+```
+
+
+    
+![png](output_65_0.png)
     
 
 
@@ -534,7 +619,7 @@ draw_board(8, 8, stones, labels, markers, coordinates=1) # coordinates=1 for int
 
 
     
-![png](imgs/output_60_0.png)
+![png](output_68_0.png)
     
 
 
@@ -588,7 +673,7 @@ help(hex_coords)
 
     Help on function hex_coords in module HexagonalBoard:
     
-    hex_coords(grid)
+    hex_coords(grid, square_like=False)
         The grid is a multi-string with the description of a hex board:
         
            . . . .
@@ -634,7 +719,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_70_0.png)
+![png](output_78_0.png)
     
 
 
@@ -656,7 +741,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_72_0.png)
+![png](output_80_0.png)
     
 
 
@@ -678,7 +763,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](imgs/output_74_0.png)
+![png](output_82_0.png)
     
 
 
@@ -691,7 +776,7 @@ draw_hexboard(hex_coords(board), hexcolor='rgb')
 
 
     
-![png](imgs/output_76_0.png)
+![png](output_84_0.png)
     
 
 
@@ -704,7 +789,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_78_0.png)
+![png](output_86_0.png)
     
 
 
@@ -717,7 +802,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue', rotate
 
 
     
-![png](imgs/output_80_0.png)
+![png](output_88_0.png)
     
 
 
@@ -732,7 +817,7 @@ draw_hexboard(hexes, hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](imgs/output_82_0.png)
+![png](output_90_0.png)
     
 
 
@@ -754,7 +839,7 @@ draw_hexboard(hex_coords(hex), hexcolor='white', edgecolor='cyan', background=No
 
 
     
-![png](imgs/output_84_0.png)
+![png](output_92_0.png)
     
 
 
@@ -791,7 +876,7 @@ draw_hexboard(hex_coords(board), piece_sz=8, label_sz=8)
 
 
     
-![png](imgs/output_86_0.png)
+![png](output_94_0.png)
     
 
 
@@ -877,7 +962,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_94_0.png)
+![png](output_102_0.png)
     
 
 
@@ -898,7 +983,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](imgs/output_96_0.png)
+![png](output_104_0.png)
     
 
 
@@ -906,6 +991,11 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 ### Versions
 
++ Feb 2
+    + included `player` parameter to class `Sq`
+    + list of moves now accept captures, eg `a1,b2:c3,d4`
+    + added square-like shapes for hexagonal boards via parameter `square_like`
+    + included `hexcolor`, `edgecolor` and `background` parameters to `Hex` class
 + Jan 27
     + added color stones directly on square boards
     + background around the board is now tighter

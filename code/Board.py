@@ -88,7 +88,9 @@ def draw_board(n_rows, n_cols, stones,
                            markerfacecolor=background, 
                            markeredgewidth=2/RATIO)
   
-      if (x,y) in stones['black'] or (x,y) in stones['purple'] or (x,y) in stones['blue']:
+      if (x,y) in stones.get('black',  []) or \
+         (x,y) in stones.get('purple', []) or \
+         (x,y) in stones.get('blue',   []):
         color = 'white' 
       else:
         color = 'black'
@@ -150,6 +152,7 @@ def intersections(grid):
   for r, line in enumerate(lines):
     for c, stone in enumerate(line.split()):
       
+      # a white piece (there are three options of white pieces)
       if stone[0] in 'xX#':
         stones['black'].append( (c, n_rows-r-1) )
         if stone[0] == 'X':
@@ -160,6 +163,7 @@ def intersections(grid):
         if len(stone) > 1: # this is a labeled stone
           labels.append( (c, n_rows-r-1, stone[1:]) )
           
+      # a black piece (there are three options of black pieces)
       elif stone[0] in 'oOQ':
         stones['white'].append( (c, n_rows-r-1) )
         if stone[0] == 'O':
@@ -175,9 +179,11 @@ def intersections(grid):
         if len(stone) > 1: # this is a labeled stone
           labels.append( (c, n_rows-r-1, stone[1:]) )
           
+      # just a label    
       elif stone[0] != '.':
         labels.append( (c, n_rows-r-1, stone) )
         
+      # it is an empty cell with a label, just just show the label
       elif len(stone)>1:
           labels.append( (c, n_rows-r-1, stone[1:]) )
         
@@ -204,17 +210,29 @@ def read_game(n_rows, n_cols, moves, labels=True, players='xo'):
      n_cols  : size of the board
      moves   : multi-line string with the moves
         moves must be separared with spaces, multi-moves by commas
+        capture use ':' (eg: 'a1,b2:c3,d4' )
      labels  : show stone's turn if True, no labels if False
      players : get color of next player
   """
-  board = [['.  ']*n_cols for _ in range(n_rows)]
+  EMPTY = '.  '
+  board = [[EMPTY]*n_cols for _ in range(n_rows)]
   players = cycle(players)
   
   for i, move in enumerate(moves):
     player = next(players)
-    for mv in move.split(','):
+    if ':' in move: # some captures occurred
+      adds, dels = move.split(':') 
+    else:
+      adds, dels = move, '' 
+    
+    for mv in adds.split(','):
       r, c = ord(mv[0])-97, int(mv[1:])-1
       board[c][r] = f"{player + str(i+1)*labels:3}"
+
+    if dels:
+      for mv in dels.split(','):
+        r, c = ord(mv[0])-97, int(mv[1:])-1
+        board[c][r] = EMPTY  # remove captured piece from board
   
   return board[::-1]
 
@@ -225,11 +243,11 @@ def board2string(board):
 #################################
 
 class Sq():
-  def __init__(self, board, go_like=True, size=False, filename='board.svg'):
+  def __init__(self, board, go_like=True, size=False, players='xo', filename='board.svg'):
     process = intersections if go_like else squares
     if size:
       n_cols, n_rows = size
-      board = board2string(read_game(n_cols, n_rows, board.split()))
+      board = board2string(read_game(n_cols, n_rows, board.split(), players=players))
     draw_board(*process(board), filename=filename)
 
 #################################
@@ -238,26 +256,26 @@ class Sq():
 
 # if __name__ == "__main__":
 
-#   ko = """
-#   . . . . .
-#   . . x o .
-#   . x o . .
-#   . . x o .
-#   . . . . .
-#   """
+  # ko = """
+  # . . . . .
+  # . . x o .
+  # . x o . .
+  # . . x o .
+  # . . . . .
+  # """
   
-#   Sq(ko, go_like=False)
+  # Sq(ko, go_like=False)
   
-#   match = """
-#   d3 h4 a5
-#   d6    c4
-#   b5    e4
-#   f4    f5
-#   c2    h6
-#   g6    h5,b1
-#   """
+  # match = """
+  # d3 h4 a5
+  # d6    c4:d3
+  # b5    e4
+  # f4    f5
+  # c2    h6
+  # g6    h5,b1
+  # """
   
-#   Sq(match, go_like=False, size=(9,6))
+  # Sq(match, go_like=False, size=(6,9))
 
 #################################
 

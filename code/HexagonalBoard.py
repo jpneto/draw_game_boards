@@ -86,7 +86,7 @@ def draw_hexboard(board, *,
 
 ###
 
-def hex_coords(grid):
+def hex_coords(grid, square_like=False):
   """
   The grid is a multi-string with the description of a hex board:
   
@@ -113,15 +113,29 @@ def hex_coords(grid):
   coords, last_sz, last_y, last_z = [], None, None, None
   lines = [line for line in grid.split('\n') if len(line)>0] # remove empty lines
 
-  for i, line in enumerate(lines):
-    sz = len(line.split())
-    if last_sz is None or last_sz < sz: # 1st row, or the rows continue to grow
-      x, y, z = i, -i, 1
-    else:                               # bottom half, rows are decreasing
-      x, y, z = i, last_y, last_z-1      
-    last_sz, last_y, last_z = sz, y, z
-    for j, cell in enumerate(line.split(), start=1):
-      coords.append( (x, y+j, z-j, cell) )
+  if not square_like: 
+    # draw typical hex-hex boards
+    for i, line in enumerate(lines):
+      sz = len(line.split())
+      if last_sz is None or last_sz < sz: # 1st row, or the rows continue to grow
+        x, y, z = i, -i, 1
+      else:                               # bottom half, rows are decreasing
+        x, y, z = i, last_y, last_z-1      
+      last_sz, last_y, last_z = sz, y, z
+      for j, cell in enumerate(line.split(), start=1):
+        coords.append( (x, y+j, z-j, cell) )
+  else:
+    # draw square-like board with hexes
+    flag = True
+    for i, line in enumerate(lines):
+      sz = len(line.split())
+      if flag:
+        x, y, z = i, -i%2, 1
+      else:
+        x, y, z = i, -i%2, 1
+      flag = not flag
+      for j, cell in enumerate(line.split(), start=1):
+        coords.append( (x, y+j, z-j, cell) )    
       
   return coords  
 
@@ -166,22 +180,39 @@ def read_hex_game(size, moves, corner, labels=True, players='xo'):
   labels  : show stone's turn if True, no labels if False
   players : get color of next player
   """
-  board = [['.  ']*i for i in range(size, 2*size)]
+  def get_rc(mv):
+    """ given a move (like 'a1') return (row, colunm) where to put it """
+    c, r = ord(mv[0])-97, int(mv[1:])-1
+    r = r - r0
+    if r < size: # at the top half board or middle row
+      start_c = c0 - r - 1
+    else:        # at the bottom half
+      start_c = r - size + 1
+    c = (c - start_c)//2
+    return r, c    
+  
+  EMPTY = '.  '
+  board = [[EMPTY]*i for i in range(size, 2*size)]
   board += [row[:] for row in reversed(board[:-1])]
   players = cycle(players)
   
   c0, r0 = ord(corner[0])-97, int(corner[1:])-1
   for i, move in enumerate(moves):
     player = next(players)
-    for mv in move.split(','):
-      c, r = ord(mv[0])-97, int(mv[1:])-1
-      r = r - r0
-      if r < size: # at the top half board or middle row
-        start_c = c0 - r - 1
-      else:        # at the bottom half
-        start_c = r - size + 1
-      c = (c - start_c)//2
+    if ':' in move: # some captures occurred
+      adds, dels = move.split(':') 
+    else:
+      adds, dels = move, '' 
+      
+    for mv in adds.split(','):
+      r, c = get_rc(mv)
       board[r][c] = f"{player + str(i+1)*labels:3}"
+    
+    if dels:
+      for mv in dels.split(','):
+        r, c = get_rc(mv)
+        board[r][c] = EMPTY # remove captured piece from board
+      
   
   # print('\n'.join(' '*((2*size-1)+(i-2*size+2 if (i>=size) else -i)) + ''.join(row) 
   #                 for i,row in enumerate(board)))  # dear Lord!
@@ -195,50 +226,72 @@ def board2string(board):
 #################################
 
 class Hex():
-  def __init__(self, board, size=False, filename='board.svg'):
-    draw_hexboard(hex_coords(board), filename=filename)   
+  def __init__(self, board, size=False, square_like=False, 
+               hexcolor='earth', edgecolor=None, background=None,
+               filename='board.svg'):
+    draw_hexboard(hex_coords(board, square_like=square_like), 
+                  hexcolor=hexcolor, 
+                  edgecolor=edgecolor, 
+                  background=background,
+                  filename=filename)   
 
 #################################
 
 # if __name__ == "__main__":
-    
-#   board = """
-#      . . . .
-#     . x . . .
-#    . . o x . .
-#   . . . . . . .
-#    . . o . x .
-#     . . . . .
-#      . . . .
+  
+#   hex = """
+#      . . . x . . .
+#       . o . . . . .
+#        . . x . . . .
+#         . . . x o . .
+#          . . . o . . .
+#           . . . . . . .
+#            . . . . . . .
 #   """
+#   Hex(hex, square_like=True, hexcolor='white', edgecolor='cyan', background='white')
+  # draw_hexboard(hex_coords(hex, square_like=True), 
+  #               hexcolor='white', edgecolor='cyan', background=None)   
   
-#   Hex(board)
   
-#   match = """
-#     o4       i7,o7  
-#     n6,j8    h8,n8  
-#     i9,p6    k7,q7  
-#     l8,r12   r6,g9  
-#     p4,h10   r4,n10 
-#     q5,r2    m5,f10
-#     p2,s5    o3,t6
-#     m3,s3    n2,u5
-#     t4,h12   l2,k11 
-#     j4,p4    i3,g5  
-#     h4,h6    g3,i5  
-#     f4,j6    f6,l6
-#     e5,c7    d6,d8
-#     i11,r10  s9,j12
-#     t10,g11  u9,o11
-#     p12,o9   q9,n12
-#     v6,v8    l4,u7
-#     k3,w7    j2,k5
-#     m9,m11   
-#     """
+# if __name__ == "__main__":
+    
+  # board = """
+  #     . . . .
+  #   . x . . .
+  #   . . o x . .
+  # . . . . . . .
+  #   . . o . x .
+  #   . . . . .
+  #     . . . .
+  # """
   
-#   moves = match.split()
-#   board = read_hex_game(7, moves, corner='h1', players='ox')
-#   draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
+  # Hex(board)
+  
+  # match = """
+  #   o4       i7,o7  
+  #   n6,j8    h8,n8  
+  #   i9,p6    k7,q7  
+  #   l8,r12   r6,g9  
+  #   p4,h10   r4,n10 
+  #   q5,r2    m5,f10
+  #   p2,s5    o3,t6
+  #   m3,s3    n2,u5
+  #   t4,h12   l2,k11 
+  #   j4,p4    i3,g5  
+  #   h4,h6    g3,i5  
+  #   f4,j6    f6,l6
+  #   e5,c7    d6,d8
+  #   i11,r10  s9,j12
+  #   t10,g11  u9,o11
+  #   p12,o9   q9,n12
+  #   v6,v8    l4,u7
+  #   k3,w7    j2,k5:o4,i7
+  #   m9,m11   
+  #   """
+  
+  # moves = match.split()
+  # board = read_hex_game(7, moves, corner='h1', players='ox')
+  # draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
     
 ####
 
