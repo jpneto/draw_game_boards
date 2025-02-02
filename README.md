@@ -36,7 +36,7 @@ Sq(ko);
 
 
     
-![png](output_6_0.png)
+![png](imgs/output_6_0.png)
     
 
 
@@ -49,7 +49,7 @@ Sq(ko, go_like=False, filename='ko.svg');
 
 
     
-![png](output_8_0.png)
+![png](imgs/output_8_0.png)
     
 
 
@@ -73,7 +73,7 @@ Sq(red_white_blue, filename='2026_02_Red_White_Blue_setup.svg');
 
 
     
-![png](output_10_0.png)
+![png](imgs/output_10_0.png)
     
 
 
@@ -97,7 +97,7 @@ Sq(match, size=(6,9));
 
 
     
-![png](output_12_0.png)
+![png](imgs/output_12_0.png)
     
 
 
@@ -120,7 +120,7 @@ Sq(match, size=(6,9), players='ox');
 
 
     
-![png](output_14_0.png)
+![png](imgs/output_14_0.png)
     
 
 
@@ -132,7 +132,7 @@ Sq(match, size=(6,9), players='oxxo');
 
 
     
-![png](output_15_0.png)
+![png](imgs/output_15_0.png)
     
 
 
@@ -160,7 +160,7 @@ Hex(board);
 
 
     
-![png](output_18_0.png)
+![png](imgs/output_18_0.png)
     
 
 
@@ -183,7 +183,7 @@ Hex(hex, square_like=True,
 
 
     
-![png](output_20_0.png)
+![png](imgs/output_20_0.png)
     
 
 
@@ -273,7 +273,7 @@ draw_board(*data) # this SVG diagram is saved as a file in the notebook's folder
 
 
     
-![png](output_33_0.png)
+![png](imgs/output_33_0.png)
     
 
 
@@ -288,7 +288,7 @@ draw_board(*data)
 
 
     
-![png](output_35_0.png)
+![png](imgs/output_35_0.png)
     
 
 
@@ -333,7 +333,7 @@ draw_board(*squares(alak))
 
 
     
-![png](output_39_0.png)
+![png](imgs/output_39_0.png)
     
 
 
@@ -348,7 +348,7 @@ draw_board(*squares(alak))
 
 
     
-![png](output_41_0.png)
+![png](imgs/output_41_0.png)
     
 
 
@@ -369,7 +369,7 @@ draw_board(*squares(board), background='khaki')
 
 
     
-![png](output_43_0.png)
+![png](imgs/output_43_0.png)
     
 
 
@@ -447,7 +447,7 @@ draw_board(*intersections(board))
 
 
     
-![png](output_53_0.png)
+![png](imgs/output_53_0.png)
     
 
 
@@ -481,7 +481,7 @@ draw_board(*intersections(board))
 
 
     
-![png](output_57_0.png)
+![png](imgs/output_57_0.png)
     
 
 
@@ -493,7 +493,7 @@ draw_board(*squares(board))
 
 
     
-![png](output_58_0.png)
+![png](imgs/output_58_0.png)
     
 
 
@@ -569,7 +569,7 @@ draw_board(*intersections(board))
 
 
     
-![png](output_62_0.png)
+![png](imgs/output_62_0.png)
     
 
 
@@ -592,7 +592,7 @@ Sq(board, go_like=False);
 
 
     
-![png](output_65_0.png)
+![png](imgs/output_65_0.png)
     
 
 
@@ -619,7 +619,7 @@ draw_board(8, 8, stones, labels, markers, coordinates=1) # coordinates=1 for int
 
 
     
-![png](output_68_0.png)
+![png](imgs/output_68_0.png)
     
 
 
@@ -719,7 +719,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](output_78_0.png)
+![png](imgs/output_78_0.png)
     
 
 
@@ -741,7 +741,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](output_80_0.png)
+![png](imgs/output_80_0.png)
     
 
 
@@ -763,7 +763,7 @@ draw_hexboard(hex_coords(board))
 
 
     
-![png](output_82_0.png)
+![png](imgs/output_82_0.png)
     
 
 
@@ -776,7 +776,7 @@ draw_hexboard(hex_coords(board), hexcolor='rgb')
 
 
     
-![png](output_84_0.png)
+![png](imgs/output_84_0.png)
     
 
 
@@ -789,7 +789,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](output_86_0.png)
+![png](imgs/output_86_0.png)
     
 
 
@@ -802,7 +802,7 @@ draw_hexboard(hex_coords(board), hexcolor='azure', edgecolor='steelblue', rotate
 
 
     
-![png](output_88_0.png)
+![png](imgs/output_88_0.png)
     
 
 
@@ -817,7 +817,7 @@ draw_hexboard(hexes, hexcolor='azure', edgecolor='steelblue')
 
 
     
-![png](output_90_0.png)
+![png](imgs/output_90_0.png)
     
 
 
@@ -839,7 +839,7 @@ draw_hexboard(hex_coords(hex), hexcolor='white', edgecolor='cyan', background=No
 
 
     
-![png](output_92_0.png)
+![png](imgs/output_92_0.png)
     
 
 
@@ -876,7 +876,7 @@ draw_hexboard(hex_coords(board), piece_sz=8, label_sz=8)
 
 
     
-![png](output_94_0.png)
+![png](imgs/output_94_0.png)
     
 
 
@@ -962,7 +962,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](output_102_0.png)
+![png](imgs/output_102_0.png)
     
 
 
@@ -983,7 +983,7 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 
     
-![png](output_104_0.png)
+![png](imgs/output_104_0.png)
     
 
 
