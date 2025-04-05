@@ -242,8 +242,11 @@ def board2string(board):
 class Hex():
   def __init__(self, board, size=False, square_like=False, 
                hexcolor='earth', edgecolor=None, background=None,
+               piece_sz=26, label_sz=18,
                filename='board.svg'):
     draw_hexboard(hex_coords(board, square_like=square_like), 
+                  piece_sz=piece_sz, 
+                  label_sz=label_sz,
                   hexcolor=hexcolor, 
                   edgecolor=edgecolor, 
                   background=background,

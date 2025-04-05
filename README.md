@@ -192,13 +192,14 @@ Hexagonal boards can also have a square-liked shape:
 hex = """
  . . . x . . 
   . o . . . . 
-  . . x . . . 
-   . . . x o .
-  . . . o . . 
+ . . x . . . 
+  . . . x o1
+ . . . o . . 
 """
 
 # it's also possible to configure the board colors
 Hex(hex, square_like=True,
+    piece_sz=30, label_sz=22,     
     hexcolor='white', edgecolor='cyan', background='white');
 ```
 
@@ -216,7 +217,7 @@ board = """
    . . . .
   . . . . .
  . . . . . .
-. . . . [oo . .
+. . . . [lll [nnnn .
 . . . . [lnnl .
  . . . . [lln
   . . . .
@@ -1017,6 +1018,8 @@ draw_hexboard(hex_coords(board2string(board)), piece_sz=14, label_sz=8)
 
 ### Versions
 
++ Apr 5
+    + included `piece_sz` and `label_sz` parameters to `Hex` class
 + Feb 2 (version 0.1)
     + added stack representation
     + included `player` parameter to class `Sq`

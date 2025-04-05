@@ -49,7 +49,7 @@ def draw_board(n_rows, n_cols, stones,
   * filename : 
       Filename with board in SVG format, default is 'board.svg'
   """
-  PIECE_SIZE, LABEL_SIZE, COORD_SIZE = 42/RATIO, 24/RATIO, 12/RATIO
+  PIECE_SIZE, LABEL_SIZE, COORD_SIZE = 48/RATIO, 26/RATIO, 12/RATIO
   size = max(n_rows, n_cols)/RATIO
   figsize = (ratio*size, size) if (ratio:=n_cols/n_rows)<1 else (size, size/ratio)
   fig = plt.figure(figsize=figsize)
